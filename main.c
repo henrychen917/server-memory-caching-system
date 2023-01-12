@@ -1,5 +1,8 @@
 #include <main.h>
 
+
+
+//thread
 void *clientHandler(threadArgs_t *args){
 	char buf[BUFSIZ];
 	int len;
@@ -33,6 +36,12 @@ void *clientHandler(threadArgs_t *args){
 
 	return 0;
 }
+
+
+
+
+
+
 
 int main (int argc, char *argv[]){
 	pool_t *pool = pool_init(default_size);
