@@ -53,12 +53,14 @@ node_t* diskInit(pool_t *pool){
     //root = insert(root,json_root->child->string, json_root->child->valuestring, pool);
     cJSON_ArrayForEach(json_ptr, json_root) {
         printf("%s: %s\n", json_ptr->string, json_ptr->valuestring);
-        root = insert(root, json_ptr->string, json_ptr->valuestring, pool);
+        root = insertNode(root, json_ptr->string, json_ptr->valuestring, pool);
     }
     cJSON_Delete(json_root);
     cJSON_Delete(json_ptr);
     //inorder(root);
     return root;
+
+    
 
 
 }

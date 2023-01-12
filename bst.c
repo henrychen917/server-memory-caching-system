@@ -20,7 +20,7 @@ void inorder(node_t *root) {
 }
 
 
-node_t* insert_s(node_t* root, uint32_t keyid, char key[32], char value[64], pool_t *pool)
+node_t* insertNode_s(node_t* root, uint32_t keyid, char key[32], char value[64], pool_t *pool)
 {
 	
 	if (root == NULL)
@@ -31,18 +31,18 @@ node_t* insert_s(node_t* root, uint32_t keyid, char key[32], char value[64], poo
 		return root;
 	}
 	if (keyid < root->keyid)
-		root->left = insert_s(root->left, keyid, key, value, pool);
+		root->left = insertNode_s(root->left, keyid, key, value, pool);
 	else
-		root->right = insert_s(root->right, keyid, key, value, pool);
+		root->right = insertNode_s(root->right, keyid, key, value, pool);
 
 
 	return root;
 }
 
-node_t* insert(node_t* root, char key[32], char value[64], pool_t *pool){
+node_t* insertNode(node_t* root, char key[32], char value[64], pool_t *pool){
 	uint32_t seed = 0;
 	uint32_t keyid = murmurhash(key, (uint32_t) str_length(key), seed);
-	return insert_s(root, keyid, key, value, pool);
+	return insertNode_s(root, keyid, key, value, pool);
 }
 
 
@@ -57,28 +57,31 @@ node_t* minValueNode(node_t* node) {
 }
 
 
-node_t* deleteNode(node_t* root, uint32_t keyid) {
+node_t* deleteNode_s(node_t* root, uint32_t keyid) {
 
 	if (root == NULL)
 		return root;
 
 	if (keyid < root->keyid)
-		root->left = deleteNode(root->left, keyid);
+		root->left = deleteNode_s(root->left, keyid);
 
 	else if (keyid > root->keyid)
-		root->right = deleteNode(root->right, keyid);
+		root->right = deleteNode_s(root->right, keyid);
 
 
 	else {
 
+
 		if (root->left == NULL) {
+
 			node_t* temp = root->right;
-			free(root);
+			pool_free(root);
 			return temp;
 		}
 		else if (root->right == NULL) {
+
 			node_t* temp = root->left;
-			free(root);
+			pool_free(root);
 			return temp;
 		}
 
@@ -86,27 +89,43 @@ node_t* deleteNode(node_t* root, uint32_t keyid) {
 
 
 		root->keyid = temp->keyid;
+		memcpy(root->key, temp->key, sizeof(char)*32);
+		memcpy(root->val, temp->val, sizeof(char)*64);
 
 
-		root->right = deleteNode(root->right, temp->keyid);
+		root->right = deleteNode_s(root->right, temp->keyid);
 	}
 	return root;
 }
 
+node_t* deleteNode(node_t* root, char key[32]){
+	uint32_t seed = 0;
+	uint32_t keyid = murmurhash(key, (uint32_t) str_length(key), seed);
+	return deleteNode_s(root, keyid);
+}
 
-node_t* searchNode(node_t* root, uint32_t keyid){
+
+
+
+
+node_t* searchNode_s(node_t* root, uint32_t keyid){
 
 	if (root == NULL)
 		return root;
 
 	if (keyid < root->keyid)
-		root->left = searchNode(root->left, keyid);
+		root->left = searchNode_s(root->left, keyid);
 
 	else if (keyid > root->keyid)
-		root->right = searchNode(root->right, keyid);
+		root->right = searchNode_s(root->right, keyid);
 	else
 		return root;
 
 }
 
 
+node_t* searchNode(node_t* root, char key[32]){
+	uint32_t seed = 0;
+	uint32_t keyid = murmurhash(key, (uint32_t) str_length(key), seed);
+	return searchNode_s(root, keyid);
+}
