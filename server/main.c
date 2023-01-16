@@ -3,7 +3,8 @@
 
 
 //thread
-void *clientHandler(threadArgs_t *args){
+void *clientHandler(void *_args){
+	threadArgs_t *args = (threadArgs_t*)_args;
 	char buf[BUFSIZ];
 	int len;
 	int new_sockfd = args->new_sockfd;
