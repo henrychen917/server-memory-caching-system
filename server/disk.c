@@ -2,6 +2,7 @@
 
 
 
+
 void diskSaveAll(node_t *root){
     FILE *fptr;
     fptr = fopen("data.json","w");

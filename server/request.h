@@ -9,6 +9,7 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <disk.h>
 
 char *processRequest(char *request, node_t *root, pool_t *pool);
 

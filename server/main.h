@@ -6,6 +6,7 @@
 #include <palloc.h>
 #include <cJSON.h>
 #include <request.h>
+#include <disk.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +18,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#include <time.h>
 
 typedef struct threadArgs_s threadArgs_t;
 

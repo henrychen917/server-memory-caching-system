@@ -4,6 +4,7 @@
 
 //thread
 void *clientHandler(void *_args){
+	time_t start, stop;
 	threadArgs_t *args = (threadArgs_t*)_args;
 	char buf[BUFSIZ];
 	int len;
@@ -17,10 +18,12 @@ void *clientHandler(void *_args){
 	inet_ntoa(clnt.sin_addr), ntohs(clnt.sin_port));
 	memset(buf, 0, BUFSIZ);
 	while (1) {
+
 		len = recv (new_sockfd, buf, BUFSIZ, 0);
 		buf[len] = '\0';
 		buf[strcspn(buf, "\n")] = 0;
 		printf("\nReceived: %s\n", buf);
+		start = time(NULL);
 		if (strncasecmp(buf, "exit", 4) == 0){
 			printf("Client exited\n");
 			send(new_sockfd, "Client exited", 200, 0);
@@ -29,7 +32,8 @@ void *clientHandler(void *_args){
 		char *response = processRequest(buf, root, pool);
 		printf("Response: %s\n", response);
 		send(new_sockfd, response, 200, 0);
-
+		stop = time(NULL);
+		printf("Time taken: %f\n", stop - start);
 	}
 	diskSaveAll(root);
 	close(new_sockfd);
@@ -79,7 +83,8 @@ int main (int argc, char *argv[]){
 		inet_aton(DEFAULT_ADDR, &serv.sin_addr);
 	}
 
-
+    int optval = 1;
+    setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval));
 
 	sin_siz = sizeof(struct sockaddr_in);
 	if (bind(sockfd, (struct sockaddr*)&serv, sizeof(serv)) < 0) {
