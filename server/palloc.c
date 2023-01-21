@@ -1,15 +1,15 @@
 #include <palloc.h>
-/*
+
 
 typedef struct test_s test;
 
 
-struct test_s{
-    int val;
-    test *next;
-};
+// struct test_s{
+//     int val;
+//     test *next;
+// };
 
-*/
+
 
 
 pool_t* pool_init(size_t size){
@@ -50,8 +50,10 @@ void* pool_alloc(size_t size, pool_t *pool){
             return m;
         }
     }
-    //p = pool;
+    p = pool;
+    //printf("1");
     np = pool_init(default_size);
+    //p->current = np;
     while (1){
         p->current = np;
         if (p->next){
@@ -115,12 +117,13 @@ pool_t* pool_destroy(pool_t *pool, pool_t *target){
 int main(void){
     pool_t *pool_ptr = pool_init(default_size);
     test *test_ptr, *temp_ptr;
-
+    printf("start");
     test_ptr = pool_alloc(sizeof(test), pool_ptr);
     test_ptr->val = 0;
 
     temp_ptr = test_ptr;
     int i = 1;
+
     do{
         temp_ptr->next = pool_alloc(sizeof(test), pool_ptr);
         if (!temp_ptr->next){
@@ -128,6 +131,7 @@ int main(void){
         }
         temp_ptr->next->val = i;
         temp_ptr = temp_ptr->next;
+        printf("%d\n",temp_ptr->val);
         i++;
     }while(i < 1000);
     temp_ptr = test_ptr;

@@ -109,15 +109,14 @@ node_t* deleteNode(node_t* root, char key[32]){
 
 
 node_t* searchNode_s(node_t* root, uint32_t keyid){
-
 	if (root == NULL)
 		return root;
 
 	if (keyid < root->keyid)
-		root->left = searchNode_s(root->left, keyid);
+		searchNode_s(root->left, keyid);
 
 	else if (keyid > root->keyid)
-		root->right = searchNode_s(root->right, keyid);
+		searchNode_s(root->right, keyid);
 	else
 		return root;
 
